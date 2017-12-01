@@ -22,3 +22,9 @@
 hs_err_pid*
 .idea
 *.iml
+*.iml
+*.iml
+taotao-common/taotao-common.iml
+*.iml
+taotao-manager/taotao-manager-service/taotao-manager-service.iml
+taotao-manager/taotao-manager-service/taotao-manager-service.iml
