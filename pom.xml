@@ -42,9 +42,24 @@
         <activemq.version>5.11.2</activemq.version>
         <freemarker.version>2.3.23</freemarker.version>
         <quartz.version>2.2.2</quartz.version>
+        <lombok.version>1.16.18</lombok.version>
+        <fastjson.version>1.2.41</fastjson.version>
     </properties>
     <dependencyManagement>
         <dependencies>
+            <!--fastjson-->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>${fastjson.version}</version>
+            </dependency>
+            <!-- lombok 插件-->
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+                <scope>provided</scope>
+            </dependency>
             <!-- 时间操作组件 -->
             <dependency>
                 <groupId>joda-time</groupId>

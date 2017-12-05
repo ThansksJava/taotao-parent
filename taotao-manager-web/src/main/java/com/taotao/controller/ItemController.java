@@ -1,5 +1,6 @@
 package com.taotao.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.taotao.pojo.TbItem;
 import com.taotao.service.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,5 +26,10 @@ public class ItemController {
     public TbItem getItem(@PathVariable long id)
     {
         return itemService.getItemById(id);
+    }
+    @RequestMapping("/list")
+    @ResponseBody
+    public String getItemList(int page,int rows){
+        return JSON.toJSONString(itemService.getItems(page,rows));
     }
 }
