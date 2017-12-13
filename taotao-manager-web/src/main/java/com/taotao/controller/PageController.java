@@ -21,4 +21,8 @@ public class PageController {
     public String toPage(@PathVariable String page){
         return page;
     }
+    @RequestMapping("/rest/page/{page}")
+    public String toEidtPage(@PathVariable String page){
+        return page;
+    }
 }
