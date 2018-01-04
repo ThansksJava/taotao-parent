@@ -309,4 +309,20 @@
       updated = #{updated,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  <update id="batchUpdateStatus" parameterType="java.util.Map">
+        UPDATE tb_item t
+           SET t. STATUS = #{status}
+         WHERE t.id IN
+       <foreach collection="ids" item="id" index="index" open="(" close=")" separator=",">
+         #{id}
+       </foreach>
+  </update>
+  <delete id="deleteByPrimaryKeys" parameterType="java.util.Arrays">
+       delete
+         from tb_item
+      where id IN
+      <foreach collection="array" item="id" index="index" open="(" close=")" separator=",">
+        #{id}
+      </foreach>
+  </delete>
 </mapper>

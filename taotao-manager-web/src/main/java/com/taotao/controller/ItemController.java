@@ -37,6 +37,12 @@ public class ItemController {
     {
         return itemService.getItemById(id);
     }
+    /**
+     * 查询商品列表
+     * @param page
+     * @param rows
+     * @return
+     */
     @RequestMapping("/item/list")
     @ResponseBody
     public String getItemList(int page,int rows){
@@ -47,20 +53,50 @@ public class ItemController {
     public String getCatList(@RequestParam(value = "id",defaultValue = "0") long parentId ){
         return JSON.toJSONString(itemCatService.getCatList(parentId));
     }
+    /**
+     * 保存
+     * @param item
+     * @param desc
+     * @return
+     */
     @RequestMapping("/item/save")
     @ResponseBody
     public TaotaoResult addItem(TbItem item, String desc){
         return itemService.saveItem(item,desc);
     }
+
+    /**
+     * 更新方法
+     * @param item 被修改的商品
+     * @param desc 描述
+     * @return
+     */
     @RequestMapping("/rest/item/update")
     @ResponseBody
     public TaotaoResult editItem(TbItem item, String desc){
         return itemService.updateItem(item,desc);
     }
-    @RequestMapping("/rest/item/stock")
+    /**
+     * 商品的上架下架
+     * @param ids
+     * @param status
+     * @return
+     */
+    @RequestMapping("/rest/item/status")
     @ResponseBody
-    public TaotaoResult stockItem(TbItem item, String desc){
-        return itemService.updateItem(item,desc);
+    public TaotaoResult stockItem(String status,String ids){
+        return itemService.updateItemStatus(status,ids);
     }
 
+    /**
+     * 根据ID删除商品
+     * @param ids
+     * @return
+     */
+    @RequestMapping("/rest/item/delete")
+    @ResponseBody
+    public TaotaoResult deleteItem(String ids)
+    {
+        return itemService.deleteItem(ids);
+    }
 }

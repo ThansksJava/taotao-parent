@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+    <!--注解扫描-->
+    <context:component-scan base-package="com.taotao.content.service"/>
+    <!--配置事务-->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+    <!--增强方法-->
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+        <tx:attributes>
+            <tx:method name="save*" propagation="REQUIRED"/>
+            <tx:method name="delete*" propagation="REQUIRED"/>
+            <tx:method name="update*" propagation="REQUIRED"/>
+            <tx:method name="add*" propagation="REQUIRED"/>
+        </tx:attributes>
+    </tx:advice>
+    <aop:config>
+        <aop:advisor advice-ref="txAdvice"
+                     pointcut="execution(* com.taotao.content.service.*.*(..))"/>
+    </aop:config>
+    <!--发布dubbo服务-->
+    <!--dubbo配置文件-->
+    <!--提供应用方信息，用于计算依赖关系-->
+    <dubbo:application name="taotao-content"/>
+    <!--注册中心的地址-->
+    <dubbo:registry protocol="zookeeper" address="192.168.25.112:2181"/>
+    <!--用dubbo协议在20880端口暴露服务-->
+    <dubbo:protocol name="dubbo" port="20881"/>
+    <!--声明需要暴露的服务接口-->
+    <!--因为在实现类上面打了注解，默认的名称是类名首字母小写-->
+    <dubbo:service interface="com.taotao.content.service.ContentService" ref="contentServiceImpl" timeout="300000000"/>
+    <!--<dubbo:service interface="com.taotao.service.ItemCatService" ref="itemCatServiceImpl" timeout="30000000"/>-->
+
+</beans>

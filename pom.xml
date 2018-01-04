@@ -10,6 +10,9 @@
         <module>taotao-common</module>
         <module>taotao-manager</module>
         <module>taotao-manager-web</module>
+        <module>comtest</module>
+        <module>taotao-portal-web</module>
+        <module>taotao-content</module>
     </modules>
     <packaging>pom</packaging>
     <properties>

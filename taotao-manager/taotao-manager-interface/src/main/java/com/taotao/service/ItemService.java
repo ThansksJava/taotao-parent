@@ -12,8 +12,46 @@ import com.taotao.pojo.TbItemDesc;
  * @Time 9:22
  */
 public interface ItemService {
+    /**
+     * 得到商品
+     * @param id
+     * @return
+     */
     TbItem getItemById(Long id);
+    /**
+     * 商品列表
+     * @param page
+     * @param rows
+     * @return
+     */
     EasyUIGridResults<TbItem> getItems(int page,int rows);
+    /**
+     * 新增商品保存
+     * @param item
+     * @param desc
+     * @return
+     */
     TaotaoResult saveItem(TbItem item, String desc);
+    /**
+     * 更新商品
+     * @param item
+     * @param desc
+     * @return
+     */
     TaotaoResult updateItem(TbItem item,String desc);
+    /**
+     * 商品的上架下架
+     * @param ids
+     * @param status
+     * @return
+     */
+    TaotaoResult updateItemStatus(String status,String ids);
+
+    /**
+     * 根据id删除商品
+     * @param ids
+     * @return
+     */
+    TaotaoResult deleteItem(String ids);
+
 }

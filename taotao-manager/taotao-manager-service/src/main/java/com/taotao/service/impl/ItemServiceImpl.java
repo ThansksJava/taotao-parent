@@ -14,8 +14,7 @@ import com.taotao.service.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -73,6 +72,22 @@ public class ItemServiceImpl implements ItemService {
         item.setUpdated(date);
         item.setStatus((byte)1);
         tbItemDao.updateByPrimaryKey(item);
+        return TaotaoResult.ok();
+    }
+
+    @Override
+    public TaotaoResult updateItemStatus(String status,String id) {
+        List<String> ids = Arrays.asList(id.split(","));
+        Map<String,Object> params = new HashMap<>();
+        params.put("status",status);
+        params.put("ids",ids);
+        tbItemDao.batchUpdateStatus(params);
+        return TaotaoResult.ok();
+    }
+
+    @Override
+    public TaotaoResult deleteItem(String ids) {
+        tbItemDao.deleteByPrimaryKeys(ids.split(","));
         return TaotaoResult.ok();
     }
 }
