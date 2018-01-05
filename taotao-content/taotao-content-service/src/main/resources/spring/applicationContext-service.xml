@@ -34,7 +34,6 @@
     <dubbo:protocol name="dubbo" port="20881"/>
     <!--声明需要暴露的服务接口-->
     <!--因为在实现类上面打了注解，默认的名称是类名首字母小写-->
-    <dubbo:service interface="com.taotao.content.service.ContentService" ref="contentServiceImpl" timeout="300000000"/>
-    <!--<dubbo:service interface="com.taotao.service.ItemCatService" ref="itemCatServiceImpl" timeout="30000000"/>-->
-
+    <dubbo:service interface="com.taotao.content.service.ContentCategoryService" ref="contentCategoryServiceImpl" timeout="300000000"/>
+    <dubbo:service interface="com.taotao.content.service.ContentService" ref="contentServiceImpl" timeout="30000000"/>
 </beans>

@@ -1,100 +1,60 @@
 package com.taotao.content.service.impl;
 
-import com.common.pojo.EasyUITreeNode;
+import com.common.pojo.EasyUIGridResults;
 import com.common.pojo.TaotaoResult;
+import com.common.utils.IDUtils;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.taotao.content.service.ContentService;
-import com.taotao.dao.TbContentCategoryDao;
+import com.taotao.dao.TbContentDao;
 import com.taotao.pojo.TbContent;
-import com.taotao.pojo.TbContentCategory;
-import com.taotao.pojo.TbContentCategoryQuery;
+import com.taotao.pojo.TbContentQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
- *
  * @Author fengjie
  * @Description
- * @Date Created in 2018/1/3
- * @Time 14:31
+ * @Date Created in 2018/1/4
+ * @Time 14:37
  */
 @Service
-public class ContentServiceImpl implements ContentService {
+public class ContentServiceImpl implements ContentService{
     @Autowired
-    private TbContentCategoryDao contentCategoryDao;
+    private TbContentDao tbContentDao = null;
     @Override
-    public List<EasyUITreeNode> getContentCategory(Long parentId) {
-        TbContentCategoryQuery contentCategoryQuery = new TbContentCategoryQuery();
-        TbContentCategoryQuery.Criteria criteria = contentCategoryQuery.createCriteria();
-        criteria.andParentIdEqualTo(parentId);
-        List<TbContentCategory> categoryList = contentCategoryDao.selectByExample(contentCategoryQuery);
-        List<EasyUITreeNode> easyUITreeNodes = new ArrayList<>();
-        for (TbContentCategory category : categoryList){
-            EasyUITreeNode easyUITreeNode = new EasyUITreeNode();
-            easyUITreeNode.setId(category.getId());
-            easyUITreeNode.setText(category.getName());
-            easyUITreeNode.setState(category.getIsParent()?"closed":"open");
-            easyUITreeNodes.add(easyUITreeNode);
-        }
-        return easyUITreeNodes;
+    public EasyUIGridResults<TbContent> getContents(long categoryId, int page, int rows) {
+        PageHelper.startPage(page,rows);
+        TbContentQuery tbContentQuery = new TbContentQuery();
+        TbContentQuery.Criteria criteria = tbContentQuery.createCriteria();
+        criteria.andCategoryIdEqualTo(categoryId);
+        List<TbContent> contents =tbContentDao.selectByExample(tbContentQuery);
+        PageInfo<TbContent> pageInfo = new PageInfo<>(contents);
+        EasyUIGridResults<TbContent> results = new EasyUIGridResults<>();
+        results.setTotal(pageInfo.getTotal());
+        results.setRows(contents);
+        return results;
     }
-
     @Override
-    public TaotaoResult addCategory(long parentId, String name) {
+    public TaotaoResult addContent(TbContent content) {
+        content.setId(IDUtils.genItemId());
         Date date = new Date();
-        TbContentCategory contentCategory = contentCategoryDao.selectByPrimaryKey(parentId);
-        boolean isparent = contentCategory.getIsParent();
-        //如果父节点的isParent属性是false才会更新
-        if(!isparent){
-            contentCategory.setIsParent(true);
-            contentCategory.setUpdated(date);
-            contentCategoryDao.updateByPrimaryKey(contentCategory);
-        }
-        TbContentCategory newCate = new TbContentCategory();
-        newCate.setIsParent(false);
-        newCate.setName(name);
-        newCate.setParentId(parentId);
-        newCate.setCreated(date);
-        newCate.setUpdated(date);
-        newCate.setSortOrder(1);
-        newCate.setStatus(1);
-        contentCategoryDao.insertSelective(newCate);
+        content.setCreated(date);
+        content.setUpdated(date);
+        tbContentDao.insert(content);
         return TaotaoResult.ok();
     }
 
     @Override
-    public TaotaoResult updateCategory(long id, String name) {
-        TbContentCategory category = contentCategoryDao.selectByPrimaryKey(id);
-        category.setName(name);
-        category.setUpdated(new Date());
-        contentCategoryDao.updateByPrimaryKey(category);
-        return TaotaoResult.ok();
-    }
-
-    @Override
-    public TaotaoResult deleteCategory(long id) {
-        TbContentCategory category = contentCategoryDao.selectByPrimaryKey(id);
-        TbContentCategoryQuery queryContentCategoryQuery = new TbContentCategoryQuery();
-        TbContentCategoryQuery.Criteria queryCriteria = queryContentCategoryQuery.createCriteria();
-        queryCriteria.andParentIdEqualTo(category.getParentId());
-        contentCategoryDao.deleteByPrimaryKey(id);
-        List<TbContentCategory> categoryList = contentCategoryDao.selectByExample(queryContentCategoryQuery);
-        if (categoryList.size()==0){
-            TbContentCategory parentCategory = contentCategoryDao.selectByPrimaryKey(category.getParentId());
-            parentCategory.setIsParent(false);
-            parentCategory.setUpdated(new Date());
-            contentCategoryDao.updateByPrimaryKeySelective(parentCategory);
-        }
-        if(category.getIsParent()){
-            TbContentCategoryQuery contentCategoryQuery = new TbContentCategoryQuery();
-            TbContentCategoryQuery.Criteria criteria = contentCategoryQuery.createCriteria();
-            criteria.andParentIdEqualTo(id);
-            contentCategoryDao.deleteByExample(contentCategoryQuery);
-        }
+    public TaotaoResult updateContent(TbContent content) {
+        Date date = new Date();
+        content.setUpdated(date);
+        tbContentDao.updateByPrimaryKeySelective(content);
         return TaotaoResult.ok();
     }
 }

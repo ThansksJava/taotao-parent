@@ -1,46 +1,40 @@
 package com.taotao.controller;
 
-import com.common.pojo.EasyUITreeNode;
+import com.common.pojo.EasyUIGridResults;
 import com.common.pojo.TaotaoResult;
 import com.taotao.content.service.ContentService;
+import com.taotao.pojo.TbContent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
- *
  * @Author fengjie
  * @Description
- * @Date Created in 2018/1/3
- * @Time 14:34
+ * @Date Created in 2018/1/4
+ * @Time 14:44
  */
 @Controller
 public class ContentController {
     @Autowired
-    private ContentService contentService;
-    @RequestMapping("/content/category/list")
+    private ContentService contentService = null;
+    @RequestMapping("/content/query/list")
     @ResponseBody
-    public List<EasyUITreeNode> getContentCategory(@RequestParam(value = "id",defaultValue = "0") Long parentId){
-        return contentService.getContentCategory(parentId);
+    public EasyUIGridResults<TbContent> getContents(long categoryId,int page,int rows){
+        return contentService.getContents(categoryId,page,rows);
     }
-    @RequestMapping("/content/category/create")
+    @RequestMapping("/content/save")
     @ResponseBody
-    public TaotaoResult addCategory(long parentId,String name){
-        return contentService.addCategory(parentId,name);
+    public TaotaoResult addContent(TbContent content)
+    {
+        return contentService.addContent(content);
     }
-    @RequestMapping("/content/category/update")
+    @RequestMapping("/content/edit")
     @ResponseBody
-    public TaotaoResult updateCategory(long id,String name){
-        return contentService.updateCategory(id,name);
-    }
-    @RequestMapping("/content/category/delete")
-    @ResponseBody
-    public TaotaoResult deleteCategory(long id){
-        return contentService.deleteCategory(id);
+    public TaotaoResult updateContent(TbContent content)
+    {
+        return contentService.updateContent(content);
     }
 }

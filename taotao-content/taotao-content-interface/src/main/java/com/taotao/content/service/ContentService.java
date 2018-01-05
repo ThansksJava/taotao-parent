@@ -1,47 +1,36 @@
 package com.taotao.content.service;
 
 import com.common.pojo.EasyUIGridResults;
-import com.common.pojo.EasyUITreeNode;
 import com.common.pojo.TaotaoResult;
 import com.taotao.pojo.TbContent;
 
-import java.util.List;
-
 /**
  * Created by IntelliJ IDEA.
- *
  * @Author fengjie
  * @Description
- * @Date Created in 2018/1/3
- * @Time 14:16
+ * @Date Created in 2018/1/4
+ * @Time 14:32
  */
 public interface ContentService {
     /**
-     * 得到页面显示内容的管理列表
-     * @param parentId
+     * 得到category下的内容信息
+     * @param categoryId
+     * @param page
+     * @param rows
      * @return
      */
-    List<EasyUITreeNode> getContentCategory(Long parentId);
+    EasyUIGridResults<TbContent> getContents(long categoryId,int page,int rows);
 
     /**
-     * 新建内容分类
-     * @param parentId
-     * @param name
-     */
-    TaotaoResult addCategory(long parentId, String name);
-
-    /**
-     * 更新目录
-     * @param id
-     * @param name
+     * 添加内容
+     * @param content
      * @return
      */
-    TaotaoResult updateCategory(long id, String name);
-
+    TaotaoResult addContent(TbContent content);
     /**
-     * 删除分类
-     * @param id
+     * 更新内容
+     * @param content
      * @return
      */
-    TaotaoResult deleteCategory(long id);
+    TaotaoResult updateContent(TbContent content);
 }
